@@ -65,26 +65,33 @@
 
     <div class="submitted">
       <p class="commenter-name">
-        <?php print $author; ?>
+        <?php 
+		dsm($comment);
+		if ($comment->uid == 0) {
+       print  t('<div style="font-size:12px;color:blue">').$comment->name.t('</div><div style="font-size:12px"> (游客)</div>') ;
+        }else{
+		print  $author;
+		}
+		?>
       </p>
       <p class="comment-time">
-        <?php print $created; ?>
+        <?php print format_date($comment->created, 'custom', "Y年m月d日 H:i")?>
       </p>
       <p class="comment-permalink">
-        <?php print $permalink; ?>
+        <?php //print $permalink; ?>
       </p>
     </div>
   </div>
 
-  <div class="comment-text">
-    <div class="comment-arrow"></div>
+  <div class="comment-text" style="margin:5px 0">
+    <div class="comment-arrow" ></div>
 
     <?php if ($new): ?>
-      <span class="new"><?php print $new; ?></span>
+      <span class="new" style="color:red"><?php print $new.t('!'); ?></span>
     <?php endif; ?>
 
     <?php print render($title_prefix); ?>
-    <h3<?php print $title_attributes; ?>><?php print $title; ?></h3>
+    <h3<?php print $title_attributes; ?>><?php //print $title; ?></h3>
     <?php print render($title_suffix); ?>
 
     <div class="content"<?php print $content_attributes; ?>>
@@ -99,7 +106,9 @@
       </div>
       <?php endif; ?>
     </div> <!-- /.content -->
-
-    <?php print render($content['links']); ?>
+<?php dsm($content)?>
+<?php print render($content['links']) ?>
+    <?php //print t('<a href="@href">回复</a>',array('@href'=> $content['links']['comment']['#links']['comment-reply']['href'])); ?>
+	
   </div> <!-- /.comment-text -->
 </div>

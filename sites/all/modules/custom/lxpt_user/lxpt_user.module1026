@@ -1,60 +1,63 @@
-<?php
+﻿<?php
 
 /**
  * @file
  *
  *  change page title for user  pages 
  */
+ global $user;
 if (arg(0) == 'user') {
-    if(arg(1)){
-	switch (arg(1)) {
-        case 'register':
-        drupal_set_title(t('用户注册'));
-        break;
+    if(arg(1)!=$user->uid){
+		switch (arg(1)){
+			case 'register':
+			drupal_set_title(t('用户注册'));
+			break;
 
-        case 'password':
-        drupal_set_title(t('找回密码'));
-        break;
+			case 'password':
+			drupal_set_title(t('找回密码'));
+			break;
             
-        case 'login':
-        drupal_set_title(t('用户登录'));
-        break;
+			case 'login':
+			drupal_set_title(t('用户登录'));
+			break;
 
-		case 'reset':
-        drupal_set_title(t('密码重置'));
-        break;
-	    //default:
-        //drupal_set_title(t('用户登录'));
-        //break;	
-    }
-	
-	switch (arg(2)) { 	
-	    case 'edit':
-        drupal_set_title(t('用户资料'));
-        break;
-        case 'points':
-        drupal_set_title(t('我的积分'));
-        break;
-		case 'invites':
-        drupal_set_title(t('邀请记录'));
-        break;
-        		
-		//default:
-        //drupal_set_title(t('用户登录'));
-        //break;	
-    }
-	if(!arg(2)){
-	
-	$cuser= user_load(arg(1));
-	drupal_set_title(t('@name的账户信息',array('@name' => $cuser->name)));
-	}
-	}
+			case 'reset':
+			drupal_set_title(t('密码重置'));
+			break;
+			
+			default:
+			drupal_set_title(t('用户登录'));
+			break;	
+		}
+	}	
 	else{
-	drupal_set_title(t('账户信息'));
-	
+		switch (arg(2)) { 	
+			case 'edit':
+			drupal_set_title(t('编辑资料'));
+			break;
+			case 'points':
+			drupal_set_title(t('我'));
+			break;
+			case 'invites':
+			drupal_set_title(t('邀请记录'));
+			break;
+        	case 'view':
+			drupal_set_title(t('个人信息'));
+			break;	
+			default:
+			drupal_set_title(t('个人信息'));
+			break;	
+		}
+		
 	}
 	
-  }
+	
+}
+else{
+	//drupal_set_title(t('账户信息'));
+	
+}
+
   
 /**
  * @file
@@ -134,6 +137,7 @@ function lxpt_user_form_alter(&$form,&$form_state,$form_id){
         '#value' => t('提交'),
 		);
 	    break;
+	
 	case'invite_form':
 
 		hide($form['message']); 
@@ -148,25 +152,40 @@ function lxpt_user_form_alter(&$form,&$form_state,$form_id){
         $form['email']['#title']=t('好友邮箱');
 		$form['email']['#description'] = t('请在上方输入您邀请的好友们的邮件地址，每行输入一个。');
 		break;
+	
 	case'user_profile_form':
 
 		
 		$form['account']['name']['#title']=t('用户名');
 		hide($form['account']['name']['#description']);
-		
 		$form['account']['mail']['#title']=t('邮件地址');
 		$form['account']['mail']['#description'] = t('请确认您邮箱的准确性');	
 		$form['account']['pass']['#description'] = t('更改新密码前请输入您当前的密码');
 		$form['account']['current_pass']['#title'] = t('当前密码');
 		$form['account']['current_pass']['#description']=t('');
 		$form['picture']['#title'] = t('头像上传');
-		$form['picture']['picture_upload']['#description'] = t('请上传您的头像，图像将被自动裁剪');
+		$form['picture']['picture_upload']['#description'] = t('请上传您的头像，若图片大于标准尺寸将会被自动裁剪');
 		$form['picture']['picture_upload']['#title'] = t('');
+		$form['picture']['picture_delete']['#title'] =t('删除头像');
+		$form['picture']['picture_delete']['#description'] =t('');
         $form['actions']['submit']['#value'] = t('保存');
 		break;
+	
 	case'userpoints_list_transactions':
-        $form['list']['table']['#header'][0]['data']=t('我的积分');
+		drupal_set_title('积分记录');
+        $form['list']['table']['#header'][0]['data']=t('积分');
+		$form['list']['table']['#header'][1]['data']=t('日期');
+		$form['list']['table']['#header'][2]['data']=t('事由');
+		$form['list']['table']['#header'][3]['data']=t('状态');
+		$form['list']['table']['#header'][4]['data']=t('操作');
+		$form['list']['table']['#empty']=t('暂无积分记录');
+		$form['list']['summary_table']['#header'][0]['colspan']= 1;
+		unset($form['list']['summary_table']['#header']);
+		//$form['list']['summary_table']['#rows'][0]['data']=t('总积分');
+		$form['list']['summary_table']['#rows'][0]['data'][0]=t('总积分');
+		unset($form['list']['summary_table']['#rows'][1]);
 		break;
+	
 	case'user_login_block':
         $form['name']['#title']=t('用户名');
 		$form['pass']['#title']=t('密码');
@@ -180,6 +199,7 @@ function lxpt_user_form_alter(&$form,&$form_state,$form_id){
 	}	
  
 dsm($form);
+//print_r($form);
 return $form;
 }
 
@@ -190,20 +210,29 @@ return $form;
  **/
 
  function lxpt_user_menu_alter(&$items) {
-  // Hiden  menu tabs
+  /* 
+  *Hiden  menu tabs for user pages
+  */
   $items['user/register']['type'] = MENU_CALLBACK;
   $items['user/register']['title'] = t('注册新用户');
   $items['user/password']['type'] = MENU_CALLBACK;
-  $items['user/%user/edit']['type'] = MENU_NORMAL_ITEM;
-  $items['user/%user/invites']['type'] = MENU_NORMAL_ITEM;
-  $items['user/%user/points']['title'] = t('积分简介');
-  $items['user/%user/points']['type'] = MENU_NORMAL_ITEM;
+  //$items['user/%user/edit']['type'] = MENU_NORMAL_ITEM;
+  $items['user/%user']['title'] = t('查看');
+  $items['user/%user/view']['title'] = t('查看');
+  
+  $items['user/%user/points']['title'] = '查看积分';
   $items['user/%user/points']['type'] = MENU_NORMAL_ITEM;
   $items['user/%user/points']['menu_name'] ='menu-my-panel' ;
-  //$items['user/%user/points']['access callback'] = TRUE;
+  
+  $items['user/%user/edit']['title'] = t('编辑');
   $items['user/%user/edit']['menu_name'] ='menu-my-panel' ;
-  $items['user/%user/invites']['menu_name'] ='menu-my-panel' ;
+  
+  $items['user/%user/invites']['type'] = MENU_NORMAL_ITEM;
+  $items['user/%user/invites/accepted']['title'] = t('成功的邀请') ;
+  $items['user/%user/invites/pending']['title']  = t('待定的邀请') ;
+  $items['user/%user/invites/expired']['title']  = t('过期的邀请') ;
   unset($items['user/%user/invites/new']);
+  
   $items['user/%user/devel']['type'] = MENU_CALLBACK;
   //modify the process of retrieve password
   $items['user/reset/%uid/%timestamp/%hashed_pass/%action'] = array(
@@ -212,7 +241,8 @@ return $form;
 	'page arguments' => array(2,3,4,'login'),
 	'access arguments' => array('access content'), 
    );
-   
+   //dsm($items['user/%user/invites']);
+  return $items;
    
    /*$items['user/%user/points']= array(
    'title' => t('积分简介'),
@@ -224,27 +254,40 @@ return $form;
    'type' => MENU_NORMAL_ITEM,
       
    );*/
-  return $items;
-}
- /*function lxpt_user_menu(){
-$items = array();
-$items['user/%user/points']= array(
-   'title' => t('积分简介'),
-   'page callback'=> 'userpoints_list_transactions',
-	'page arguments' => array(1),
-   'menu_name' =>'menu-my-panel',
    
-   'access arguments' => array('access content'),
-   'type' => MENU_NORMAL_ITEM,
-      
-   );
-  return $items;
+}
 
 
 
-}*/
 
-/*override core function user_pass_reset() for bypass one-time login page during password reseting
+
+
+
+
+
+
+
+
+
+
+
+/*
+function lxpt_user_help($path,$arg){
+	$output = '';
+	switch($path){
+		case 'user/%/invites/pending':
+		
+		$output = '<p>' . t("您邀请成功的用户") . '<p>';
+		break;
+		
+		
+		}
+		
+	return $output;	
+}
+ 
+
+override core function user_pass_reset() for bypass one-time login page during password reseting
 function user_pass_resets($form,&$form_state,$uid, $timestamp, $hashed_pass, $action='login' ) {
   global $user;
 

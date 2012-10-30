@@ -41,7 +41,7 @@ $account_points=userpoints_get_current_points($account->uid);
 ?>
 <div id="username">用户名：<?php print render($account->name);?></div>
 
-<div id="userpic"><?php print render($account->picture);?></div>
+<div id="userpic"><?php //print render($account->picture);?></div>
 <div id="user-displayname"><?php print render($account->field_displayname);?></div>
 <div id="usermail">邮件：<?php print render($account->mail);?></div>
 <div id="account_points">当前积分：<?php print render($account_points);?></div>
