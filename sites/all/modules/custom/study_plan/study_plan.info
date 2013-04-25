@@ -1,0 +1,7 @@
+;$Id$
+
+name = Study Plan
+description = "study plan with multistep form"
+core = 7.x
+
+package =  Study Plan

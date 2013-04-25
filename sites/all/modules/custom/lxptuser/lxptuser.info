@@ -1,0 +1,11 @@
+name = lxptuser
+description = for user pages
+package = Lxpt
+core = 7.x
+
+
+
+core = "7.x"
+project = "Lxpt"
+
+

@@ -1,0 +1,16 @@
+name = Inline Comments
+description = A views handler that lets you display comments with ajax retrieval and post comments inline via ajax.
+dependencies[] = comment
+dependencies[] = views
+core = 7.x
+files[] = inline_comments.module
+files[] = inc/ajax.inc
+files[] = inc/inline_comments.views.inc
+files[] = inc/inline_comments_handler_field_inline_comments.inc
+files[] = tests/inline_comments.test
+; Information added by drupal.org packaging script on 2012-03-25
+version = "7.x-1.0-beta2"
+core = "7.x"
+project = "inline_comments"
+datestamp = "1332711947"
+

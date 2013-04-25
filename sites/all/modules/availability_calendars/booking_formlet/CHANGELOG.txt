@@ -1,0 +1,67 @@
+Availability Calendar Booking Formlet
+=====================================
+
+Availability Calendar 7.x-4.x
+=============================
+
+Incompatibilities with 7.x-3.x:
+-------------------------------
+See the changelog of the Availability Calendars module itself.
+
+Availability Calendar Booking Formlet 7.x-4.x-dev 2012-xx-xx
+------------------------------------------------------------
+- Error: js error in initializing default end date.
+- Error: setting 'Only allow single day bookings' not displayed/saved correctly.
+- [#1835918]: Field "URL to continue the booking" does not appear in a site with
+  only the default language (en) installed.
+
+Availability Calendar Booking Formlet 7.x-4.x-alpha1 2012-11-02
+---------------------------------------------------------------
+- [#1813074]: Calendar and Booking formlet fields have problems when used in a
+  view that displays separate fields.
+- [#1668242]: Make the UI for single day rental use cases easier.
+- [#1661454]: Better distinction between whole day and overnight rental.
+- [#1413130]: Using date in other formats.
+- [#1483780]: Example date for departure.
+- [#1653150]: Allow booking formlet to be shown independent of calendar.
+- [#1637372]: Incompatibility with Openlayers module. Change JS code to prevent
+  mal designed modules to no longer function.
+- Updated README.txt
+- Follow up of [#1508066]: Refactor javascript to use the same initialization
+  pattern for viewport, editor and booking formlet, that can handle multiple
+  instances and ajax refreshes (including execution of attachBehavior).
+- Feature: improved field settings edit form: dynamically show/hide text fields
+  for language neutral versus per language based on checkbox state.
+- [#1520936]: Calendar display not supporting RTL languages.
+- Feature: Set default booked state to "Provisionally booked" (if that state
+  exists).
+- [#1519444]: Booking formlet does not show with default calendars.
+- JS refactoring.
+- Also POST calendar name (as it is part of the field value).
+- Better handling of multiple formlets on 1 page, e.g. teaser listings.
+- Also set/remove class form-button-disabled when (un)setting disabled attribute.
+- Improved CSS.
+
+
+Availability Calendar 7.x-3.x
+=============================
+
+Availability Calendar Booking Formlet 7.x-3.0 2011-09-19
+--------------------------------------------------------
+- Only show the formlet if there is an enabled calendar.
+- Added basic styling to the formlet.
+- Added an option to make the "URL to proceed the booking" language dependent.
+- Moved instance settings (Post URL and booked state) to the field level.
+  This requires a deletion of all formlet fields followed by re-adding them to
+  your content types.
+- [#1268202]: Fatal error: Call to undefined function availability_calendar_get_states().
+
+Availability Calendar Booking Formlet 7.x-3.x-alpha3 2011-09-01
+---------------------------------------------------------------
+- Added entity label as a hidden field to the formlet.
+- Update README.txt with more instructions regarding webform.
+
+Availability Calendar Booking Formlet 7.x-3.x-alpha2 2011-08-24
+---------------------------------------------------------------
+- First version of this submodule that adds a booking formlet field.
+  See "README.txt" for details.

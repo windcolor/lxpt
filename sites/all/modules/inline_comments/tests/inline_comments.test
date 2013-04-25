@@ -1,0 +1,55 @@
+<?php 
+/**
+  *@file
+  * Inline Comments tests  to verify users can create and access  comments inline via ajax as well as tests for views results
+  *
+*/
+
+/**
+  * We extend the Comment module's test class to  use the goodies there and avoid re-inventing the wheel
+  *
+*/
+
+class InlineCommentsTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Inline Comments Tests',
+      'description' => t('User comments view permissions test'),
+      'group' => 'Inline Comments',
+    );
+  }
+  
+  public function setUp() {
+    parent::setUp('inline_comments');
+    // Create admin  and normal users  and  a node
+    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
+  }
+  
+  
+  public function testInlineCommentsPostTest() {
+    $this->drupalLogin($this->web_user);
+    $path = $this->getAbsoluteUrl('ajax/inline_comments/add_comments');
+    $edit = array(
+      'uid' => $this->web_user->uid, 
+      'nid' => $this->node->nid,
+      'comment_text'=> $this->randomName(),
+      'action' => $path,
+    );
+    
+    foreach($edit as $key=>$value){
+      $edit[$key] = urlencode($key) . '=' . urlencode($value);
+    }
+    $edit = implode('&', $edit);
+    
+
+
+    $comments = $this->curlExec(array(CURLOPT_URL => $path, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $edit, CURLOPT_HTTPHEADER => array()));
+    
+    $this->verbose('Comments: ' . var_export($comments , TRUE));
+  // check if our new comment  $edit['text']   is in the returned comments
+    $this->assertTrue(strpos($comments, $edit['comment_text']) > 0, t('Comment saved and loaded.'));
+    
+    return $comments;
+  }
+}

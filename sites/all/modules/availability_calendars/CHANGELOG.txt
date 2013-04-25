@@ -1,0 +1,141 @@
+Availability Calendar
+=====================
+
+Availability Calendar 7.x-4.x
+=============================
+
+Incompatibilities with 7.x-3.x:
+-------------------------------
+These are actions and checks you have to perform manually after you have
+upgraded to this version.
+- Clear all caches.
+- Date formats are now customisable: customise (admin/config/regional/date-time
+  and admin/config/regional/date-time/locale) them to your likings and check all
+  your date handling and displaying parts to see whether they are still working
+  as expected.
+- Visit and save the "field settings" and "manage display" pages for all
+  calendar fields and define whether they are day or overnight based.
+- Visit and save the "field settings" and "manage display" pages for all booking
+  formlet fields and check whether the new settings are better suited to your
+  use case.
+- Theming: check if all your custom styling still applies correctly. E.g., the
+  buttons for the booking formlet are changed into <button>s; classes and other
+  attributes have changed for several elements.
+- Periods: the 2nd date of a period is either inclusive (day rental) or not
+  inclusive (overnight rental, typically the "departure" date). In 7.x-3.x, the
+  2nd date was always not inclusive. Test and check that every part is still
+  working as expected.
+- Booking formlet to webform POST: the arrival and departure fields are renamed
+  to from_display and to_display. You have to update the default values for the
+  elements that receive these values in the (or all in a multilingual site)
+  webform. I.e: change "%post[arrival]" to "%post[from_display]" and change
+  "%post[departure]" to "%post[to_display]".
+- Booking formlet to webform POST: there are additional fields that now get
+  posted: %post[from_iso] and %post[to_iso]. See the readme (of booking formlet)
+  for an explanation of these values and their differences with from_display and
+  to_display.
+- API and JavaScript changes. Almost all API and JavaScript functions have been
+  changed. Sometimes just slightly, sometimes they are completely rewritten or
+  even replaced. If you have done custom coding: test it all. API changes are
+  not separately described, they are part of the items in the change log below
+  that is grouped by issue (feature/bug) not by API function.
+
+
+Availability Calendar 7.x-4.x
+=============================
+
+Availability Calendar 7.x-4.x-dev 2012-xx-xx
+--------------------------------------------
+- [#1838360]: Timezone based error: split day duplicated on second day.
+- Untranslated texts.
+
+Availability Calendar 7.x-4.x-alpha1 2012-11-02
+-----------------------------------------------
+- Incorrect error message "only future ..." on searching today's availability.
+- Views: Do not show the filter on availability as a displayable field.
+- [#1813074]: Calendar and Booking formlet fields have problems when used in a
+  view that displays separate fields.
+- [#1814634]: Notice: Undefined index: selectable in
+  availability_calendar_add_full_calendar_js()
+- [#1799826]: Fatal error in availability_calendar_get_calendar().
+- Error: IE8- hack: IE8 and lower do not support the indexOf method on arrays.
+- Error: Translated <none> on styling form is written to generated css file.
+- [#1679524]: Adaptive viewport.
+- [#1360702]: Allow invalid "default values" for exposed fields in availability
+  search.
+- [#1714504]: Disabled links don't look disabled.
+- [#1676612]: Viewport fails when same calendar is displayed twice on the page.
+- [#1678190]: Double date with date popup.
+- [#1661454]: Better distinction between whole day and overnight rental.
+- [#1413130]: Using date in other formats.
+- [#1447228] by Marc-Antoine: Allow to translate the labels of the availability
+  states.
+- [#1447228] by Marc-Antoine: A.C. is unable to update it's own database.
+- [#1653150]: Allow booking formlet to be shown independent of calendar:
+  Changes in JavaScript and add availability_calendar_is_available() to API.
+- [#1637372]: Incompatibility with Openlayers module. Change JS code to prevent
+  mal designed modules to no longer function.
+- [#1410852]: settings.availabilityCalendar.states is not defined in attach
+  behavior on Ajax refresh.
+- Follow up of [#1508066]: Refactor javascript to use the same initialization
+  pattern for viewport, editor and booking formlet, that can handle multiple
+  instances and ajax refreshes (including execution of attachBehavior).
+- [#1520936]: Calendar display not supporting RTL languages.
+- Error, caught while solving [#1520936]: incorrect change of width and height
+  usage in CSS style generation.
+- Error: Default set of Allowed states not correct.
+- [#1569334]: Message: An illegal choice has been detected.
+  Please contact the site administrator.
+- [#1508066]: Viewport keeps scrolling.
+- JS refactoring.
+- [#1458118]: Remove LICENSE.txt from Git repository.
+
+
+Availability Calendar 7.x-3.x
+=============================
+
+Availability Calendar 7.x-3.2 2012-01-20
+----------------------------------------
+- [#1411452]: Views integration fails with multiple calendar fields.
+- [#1410822]: Fatal error: Access level to availability_calendar_handler_filter_
+  availability::$always_multiple must be public.
+- [#1371182]: Calendars are too wide in some themes or other style overrides by
+  themes.
+- [#1355640]: All states shown in key block despite the block settings.
+- Further corrections on Views integration, e.g. INNER JOIN changed into a LEFT
+  JOIN.
+- Error: DateTime::modify returns null in 5.2.
+
+Availability Calendar 7.x-3.1 2011-11-12
+----------------------------------------
+- [#1281022-6]: Key incorrectly gets css class cal-month.
+- Reworked the availability filter for Views. You can now choose between from/to
+  or from/duration to specify the period.
+- [#1332264]: An AJAX HTTP error occurred when using the availability filter for
+  Views.
+- [#1183372]: 'Show first half of current day as past date in split day
+  situation' was not really solved.
+- Error: Mixed up variable names availability_calendar_styles_generate and
+  availability_calendar_settings_system_generate.
+- Error: Calendar not shown on edit form when user may not disable the calendar.
+- Cleaned up some code and classes in calendar widget and its usage in
+  availability_calendar.edit.js.
+- Calendar widget is no longer within a fieldset to not disturb its layout
+  compared to the calendar field formatter.
+- Slightly easier to use availability_calendar_get_states.
+- Improved information in "README when coming from Availability Calendars.txt".
+- [#1301500]: More sensible defaults.
+- [#1290874]: Clone date objects before they are changed.
+- [#1290874]: Allow multiple entities per form.
+
+Availability Calendar 7.x-3.0 2011-09-19
+----------------------------------------
+- Fields based rewrite of Availability Calendar module.
+  This module is a complete rewrite, so the changelog has been cleaned.
+
+
+Current and past maintainers for Availability Calendar(s)
+=========================================================
+- geodaniel (http://drupal.org/user/37266)
+- nicholas.alipaz (http://drupal.org/user/296276)
+- fietserwin (http://drupal.org/user/750928)

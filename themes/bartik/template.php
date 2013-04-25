@@ -35,11 +35,24 @@ function bartik_process_html(&$variables) {
     _color_html_alter($variables);
   }
 }
+function bartik_process_node(&$variables) {
+
+ //dsm($variables['theme_hook_suggestions']);
+
+}
 
 /**
  * Override or insert variables into the page template.
  */
 function bartik_process_page(&$variables) {
+//remove term page no content notice
+//dsm($variables);
+//dsm($variables['theme_hook_suggestions']);
+if(isset($variables['page']['content']['system_main']['no_content'])) {
+    unset($variables['page']['content']['system_main']['no_content']);
+  }
+
+
 // Add template suggestions based on content type 
 	if (isset($variables['node'])) {  
      $variables['theme_hook_suggestions'][] = "page--type--" . $variables['node']->type;
@@ -97,11 +110,22 @@ function bartik_process_page(&$variables) {
 		//$variables['page']['content']['system_main']['main']['#markup']=t('暂无相关邀请记录');
 	}
 	
-   //dsm("$variables");
-   //print_r($variables);
+
+  
+  } 
+//for user register page
+	 if(arg(0)=='user'&&arg(1)=='register'){
+	$variables['page']['content']['system_main']['account']['pass']['pass1']['#title'] = t('登陆密码');
+	$variables['page']['content']['system_main']['account']['pass']['pass2']['#title'] = t('确认密码');
+	$variables['page']['content']['system_main']['account']['pass']['#description'] = t('请在上方输入并确认您的用户密码');
+	
+	//unset($variables['page']['content']['system_main']['account']['pass']['#process'][1]); 
+
   
   }  
-}  
+} 
+
+
 /**
  * override invite entry and tables
  */
@@ -167,9 +191,16 @@ function bartik_process_maintenance_page(&$variables) {
  * Override or insert variables into the node template.
  */
 function bartik_preprocess_node(&$variables) {
+
   if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
     $variables['classes_array'][] = 'node-full';
   }
+  
+  //foreach ($variables['node']->nid as $term) {
+    
+    //$variables['template_files'][] = 'taxonomy-term-'. $term->name;
+  //}
+  
 }
 
 /**
@@ -212,3 +243,16 @@ function bartik_field__taxonomy_term_reference($variables) {
 
   return $output;
 }
+//custom theme term page
+function bartik_preprocess_taxonomy_term(&$variables) {
+//dsm($variables);
+//$variables['elements']['#term']->name = t('');
+ 
+//if (isset($variables['vid'])) {  
+  
+  //$vocab = taxonomy_vocabulary_load($variables['vid']);
+  //dsm($vocab);
+  //$variables['theme_hook_suggestions'][] = "taxonomy-term-".$vocab->machine_name;
+  //}
+  //dsm($variables['theme_hook_suggestions']);
+ }

@@ -38,12 +38,41 @@ $account = menu_get_object('user');
 $account_points=userpoints_get_current_points($account->uid);
 //dsm($account);
 //dsm($user_profile);
+drupal_set_title(t("个人空间"));
 ?>
-<div id="username">用户名：<?php print render($account->name);?></div>
+<div id="userpic"><?php 
+if($account->picture){
+print theme('image_style', array('style_name' => 'term-logo', 'path' => $account->picture->uri));
+}else{
+print theme('image_style', array('style_name' => 'term-logo', 'path' => 'public://pictures/head.jpg'));
 
-<div id="userpic"><?php //print render($account->picture);?></div>
-<div id="user-displayname"><?php print render($account->field_displayname);?></div>
+}
+
+?></div>
+<div class="userdetail">
+<div id="username">用户名：<?php print render($account->name);?></div>
+<div id="user-displayname">姓名：
+  <?php 
+    if($account->field_displayname['und'][0]['safe_value']){
+    print $account->field_displayname['und'][0]['safe_value'];
+    }
+  ?>
+</div>
 <div id="usermail">邮件：<?php print render($account->mail);?></div>
 <div id="account_points">当前积分：<?php print render($account_points);?></div>
+</div>
+<div id="userapp">
 
 
+
+</div>
+<?php
+ $viewName = 'clone_of_og_user_groups';
+print views_embed_view($viewName,$display_id = 'block_1');
+print views_embed_view($viewName,$display_id = 'block_2');
+ 
+ //$block1 = module_invoke('block','block_view','1'); print render($block1['content']);
+ //$block2 = module_invoke('block','block_view','1'); print render($block2['content']);
+
+
+?>

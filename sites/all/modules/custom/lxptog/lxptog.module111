@@ -1,0 +1,195 @@
+<?php
+
+/**
+ * @file
+ *
+ *  change page title for user  pages 
+ */
+
+  
+/**
+ * @file
+ *
+ *  implement hook_form_alter()for customize user pages 
+ */
+
+
+function lxptog_form_alter(&$form,&$form_state,$form_id){
+ switch ($form_id){ 
+	case'comment_node_posts_form':
+        $form['author']['_author']['#title'] = t('姓名');
+		$form['author']['name']['#title'] = t('姓名');
+		$form['author']['name']['#maxlength'] = 15;
+		$form['author']['name']['#size'] = 15;
+		
+		//$form['subject']['#title'] = t('评论标题');
+		$form['actions']['submit']['#value'] = t('确认');
+		unset($form['subject']);
+		unset($form['comment_body']['und'][0]['#title']);
+		unset($form['comment_body']['und'][0]['#required']);
+		hide($form['actions']['preview']);
+		break;
+	case'og_ui_confirm_subscribe':
+		drupal_set_title(t('您确定要加入“@groupname”吗？',array('@groupname' => $form['group']['#value']->label)));
+		 $form['actions']['submit']['#value'] = t('确认');
+		 $form['actions']['cancel']['#title'] = t('取消');
+		 //$form['membership_fields']['og_membership_request']['und']['#title']=t('申请留言');
+		 //$form['membership_fields']['og_membership_request']['und']['#description']=t('留言将发送群组管理员');
+		 //$form['membership_fields']['og_membership_request']['und'][0]['#title']=t('申请留言1');
+		 //$form['membership_fields']['og_membership_request']['und'][0]['#description']=t('留言将发送群组管理员1');
+		 $form['membership_fields']['og_membership_request']['und'][0]['value']['#title']=t('申请留言:');
+		 $form['membership_fields']['og_membership_request']['und'][0]['value']['#description']=t('留言将发送给群组管理员');
+		//unset($form['membership_fields']['og_membership_request']);
+		
+		break;
+		case'og_ui_confirm_unsubscribe':
+		drupal_set_title(t('您确定要退出 “@groupname” 吗？',array('@groupname' => $form['group']['#value']->label)));
+		 $form['actions']['submit']['#value'] = t('确定');
+		 $form['actions']['cancel']['#title'] = t('取消');
+		 //$form['membership_fields']['og_membership_request']['und']['#title']=t('申请留言');
+		 //$form['membership_fields']['og_membership_request']['und']['#description']=t('留言将发送群组管理员');
+		 //$form['membership_fields']['og_membership_request']['und'][0]['#title']=t('申请留言1');
+		 //$form['membership_fields']['og_membership_request']['und'][0]['#description']=t('留言将发送群组管理员1');
+		 //$form['membership_fields']['og_membership_request']['und'][0]['value']['#title']=t('申请留言:');
+		 //$form['membership_fields']['og_membership_request']['und'][0]['value']['#description']=t('留言将发送给群组管理员');
+		//unset($form['membership_fields']['og_membership_request']);
+		
+		break;
+		
+	case'posts_node_form':
+		drupal_set_title(t('创建新话题'));
+		$form['title']['#title'] = t('标题');
+		unset($form['title']['#required']);
+		//$form['body']['und'][0]['#title'] = t('内容');
+		//unset($form['body']['und']['#after_build']);
+		hide($form['group_audience']);
+		$form['actions']['submit']['#value'] = t('发布');
+		hide($form['actions']['preview']);
+	
+	
+		break;
+	case'groups_node_form':
+		drupal_set_title(t('创建新群组'));
+		$form['title']['#title'] = t('群组名称');
+		unset($form['title']['#required']);
+		//$form['body']['und'][0]['#title'] = t('内容');
+		//unset($form['body']['und']['#after_build']);
+		hide($form['og_views']);
+		hide($form['og_node_link']);
+		hide($form['group_group']);
+		
+		
+		$form['actions']['submit']['#value'] = t('创建');
+		hide($form['actions']['preview']);
+	
+	
+		break;	
+	
+		
+	}	
+ 
+//dsm($form);
+//print_r($form);
+
+return $form;
+}
+/**
+ * Implements hook_field_formatter_info_alter().
+ *
+ * 
+
+
+ 
+ function lxptog_menu_link_alter(&$item){
+//dsm($item['link_path']);
+if($item['link_path']=='gorup/%/%/subscribe'){
+dsm($item);
+$item['link_title'] = t('加入本群组');
+};
+}
+ **/
+function lxptog_node_view_alter(&$build){
+//dsm($build);
+global $user;
+$cuid=$user->uid;
+if(arg(0)=='node'&&arg(1)){
+
+$node=node_load(arg(1));
+$nuid= $node->uid;
+//dsm($node);
+
+	if(($node->type) =='groups'){
+	     //dsm($build['group_group']);
+		 
+
+		$cgroup = og_get_group('node', $node->nid);
+		$cgid = $cgroup->gid;
+		//dsm($cgroup);
+		if(og_is_member($cgid)&&($cuid!=$nuid)){
+			$build['group_group'][0]['#title'] = t('退出本组');
+			
+		}elseif(og_is_member($cgid)&&($cuid==$nuid)){
+		         //dsm($node);
+				//$build['group_group'][0]['#markup']==t('您是群组创始人');
+		}else{
+			$build['group_group'][0]['#title'] = t('申请加入');
+			
+			}
+		}
+	unset($build['group_group'][0]['#markup']);
+	$build['og_node_link'][0]['#title'] = t('发表话题');
+	$build['#post_render'][] = 'lxptog_node_post_render';
+
+	}
+}
+/**
+ * Implements hook_menu_alter().
+ *
+ * 
+ **/
+
+ function lxptog_menu_alter(&$items) {
+  /* 
+  *Hiden  menu tabs for user pages
+  
+  */
+  //$items['group/%/%/subscribe']['#title']=t('111');
+  //$items['group/%/%/subscribe']['page callback']='og_ui_subscribe_my';
+  //dsm($items);
+  
+   
+}
+
+
+/*
+*
+* change comment layout 
+*/
+
+function lxptog_comment_view_alter(&$build) {
+  // Check for the existence of a field added by another module.
+  if ($build['#view_mode'] == 'full' && isset($build['links'])) {
+    //dsm ($build['links']);
+    // Change its weight.
+    $build['links']['comment']['#links']['comment-reply']['title'] =t('回复') ;
+  }
+
+  // Add a #post_render callback to act on the rendered HTML of the comment.
+  $build['#post_render'][] = 'lxptog_comment_post_render';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

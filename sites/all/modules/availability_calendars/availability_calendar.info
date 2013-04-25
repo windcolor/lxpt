@@ -1,0 +1,16 @@
+name = Availability Calendar
+description = Defines an availability calendar field.
+package = Fields
+core = 7.x
+
+configure = admin/config/content/availability-calendar/settings
+
+; Views handlers
+files[] = availability_calendar_handler_filter_availability.inc
+
+; Information added by drupal.org packaging script on 2012-11-14
+version = "7.x-4.0-alpha2"
+core = "7.x"
+project = "availability_calendars"
+datestamp = "1352925958"
+

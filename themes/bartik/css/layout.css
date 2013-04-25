@@ -98,3 +98,353 @@ body,
   width: 940px;
   min-width: 920px;
 }
+
+/*for video classroom  main page*/
+
+.teacher-classroom {
+border: 1px solid #CCC;
+padding: 5px 10px;
+width: 180px;
+float: right;
+margin: 0;
+}
+
+
+.teacher-classroom h2 ,.teacher-brief h2{
+    font-weight: bold;
+    margin: 5px;
+    text-align: center;
+}
+.classvideo {
+    float: left;
+    width: 480px;
+	height:450px;
+	background: url(../images/videobackground.png) no-repeat;
+}
+.classroom-comments {
+    border-top: 3px solid #CCCCCC;
+    clear: left;
+    
+}
+.teacher-brief {
+border: 1px solid #CCC;
+padding: 5px 10px;
+width: 180px;
+float: right;
+margin-top: 20px;
+}
+.subscribe {
+z-index: 1;
+position: absolute;
+left: 200px;
+top: 230px;
+font-size: 18px;
+
+}
+.subscribe a{
+color:#FFF;
+
+}
+.subscribe a:hover{
+color:#000;
+ text-decoration:none;
+}
+
+
+
+
+.field_ship {
+position: absolute;
+z-index: 2;
+}
+
+
+
+/* for multi-media classroom list page */
+
+.video-row{
+
+height:100px;
+
+
+}
+.video-row .video_img {
+margin: 5px 0 0 10px;
+align: center;
+}
+.video-row td{
+text-align:center;
+min-width:80px;
+max-width:120px;
+border:0;
+
+
+}
+.video-row td p{
+margin:0
+}
+.views-table thead tr th {
+    text-align: center;
+}
+
+
+.views-exposed-widget div{
+float:left;
+margin-right:15px
+}
+
+.views-widget-filter-secondary legend span {
+ 
+    width: 100px;
+}
+
+.views-reset-button{
+
+margin:-10px 0  0 40px
+}
+
+#block-views-multi-media-classroom-block-1 .recommend {
+float: left;
+text-align: center;
+margin: 5px;
+}
+
+#block-views-multi-media-classroom-block-1 h2 {
+font-weight: bold;
+}
+
+.tuijian .view-content {
+    border: 1px solid #CCC;
+    height: 150px;
+    margin-bottom: 30px;
+    padding: 15px 0 0 10px;
+}
+
+.video_img {
+float: left;
+margin-right: 10px;
+text-align: center;
+}
+/*news teaser list page*/
+
+.newsteaser div { float:left}
+#newsbyimage{clear:left;width:20%}
+#newsbody{float:left;width:80%}
+#newstag,#newsdate {
+    font-size:10px;
+    margin-left:20px;
+	float:right;
+}
+
+#newstag ul {
+    clear:left;
+       
+}
+ .newsteaser span {
+font-weight: bold;
+float: left;
+margin-right: 5px;
+}
+.node-article h2 a {
+font-weight: bold;
+text-decoration: none;
+}
+
+.term-news {
+float: left;
+border: solid 1px #CCC;
+margin: 0 15px;
+width: 45%;
+}
+
+.term-news-title {
+text-align: center;
+padding: 10px 0;
+margin-bottom: 10px;
+background: #CCC;
+}
+
+.term-news-title a {
+color: black;
+font: bold 18px SiM;
+}
+
+.sub-term-news {
+height: 100px;
+display:table;
+margin: 15px;
+}
+
+.sub-term-news img {
+width: 100px;
+float: left;
+margin-right:10px;
+}
+
+.sub-term-news a {
+vertical-align: middle;
+display: table-cell;
+text-decoration: none;
+}
+.top-news {
+margin-bottom: 20px;
+}
+.top-news #newsbody {
+width: 55%;
+float: left;
+}
+.top-news #newsbyimage {
+width: 45%;
+float: left;
+margin-top: 40px;
+}
+
+/*user -profile page*/
+
+#userpic {
+    float: left;
+    margin-right: 20px;
+}
+.userapp ,#userapp{
+    border-top: 3px solid #CCCCCC;
+    margin: 10px 0 10px 0;
+	float: left;
+    width: 100%;
+
+}
+
+#block-views-clone-of-og-user-groups-block-2{
+float:left;
+display:block;
+width:100%
+}
+.applogo {
+    float: left;
+    margin: 0 50px 10px 0;
+    text-align: center;
+}
+.applogo span{
+display:block;
+}
+/*library term page*/
+.tools-top-term {
+    float: left;
+    margin: 40px;
+    
+}
+.tools-top-term img{
+    
+    
+}
+.tools-top-term span{
+display:block;
+text-align:center;
+}
+.node-learning-tools {
+    float: left;
+}
+.tools-terms {
+    display: inline;
+    float: left;
+    width: 230px;
+}
+
+/*intrest group*/
+.grouplogo{float:left;width:20%}
+.groupbrief{float:left;width:50%}
+.grouproom{float:left;margin-left: 20px;}
+.group_main_post{clear:left;}
+.grouplink{clear:left;width:100%;padding-bottom:5px;border-bottom:1px solid #ccc}
+#roomcreater{font:bold 14px/20px SimSun}
+#grouptype {
+    
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+#grouptype{width:100%;display:left;}
+#grouptype .field-name-field--leib{float:right;margin:0;padding-right:30px}
+#grouptype a{font-size:14px}
+
+.tools-top-term-1 {
+    float: left;
+    margin: 30px;
+}
+.tools-top-term-1 span {
+    display: block;
+    text-align: center;
+}
+/*intrest group views*/
+.groups-overview {
+    background:  #F6F6F2;
+    border: 3px solid #ccc;
+    float: left;
+    margin: 5px 20px;
+    min-height: 120px;
+    padding: 10px;
+    width: 40%;
+	font-size:13px;
+}
+
+.grouplogo {
+    float: left;
+    margin: 0 10px;
+    text-align: center;
+    width: 100px;
+}
+#block-views-multi-media-classroom-block-2 .views-exposed-form, 
+#views-exposed-form-multi-media-classroom-page-2 .views-exposed-form {
+width: 80%;
+margin: 0 auto;
+}
+/*intrest group sidebar*/
+.addgroups a {
+    background:  #313B5A;
+    color: #fff;
+    font: bold 15px/20px simsun;
+    margin: 0 auto;
+    padding: 5px 6px;
+	border:1px;
+}
+.addgroups a:hover{
+color:#fff;
+text-decoration: none;
+background:#3B7ABD;
+
+
+}
+.addgroups {float:left;margin-left:5px}
+
+#block-block-5{background:none;border:0}
+#block-block-5 .content{padding-bottom:10px;border:0;}
+
+/* hide group visible field on group edit page*/
+#edit-group-access {
+display: none;
+}
+/*union-term-page*/
+.union-top-term{float:left; margin:20px}
+.union-top-term span{display:block;text-align:center}
+#block-title{color:black;font:bold 15px/20px SimSun}
+
+#xiaohui { float: left;margin-right:20px}
+.clear{clear:both ;border:1px solid #ccc;margin-bottom:15px}
+#unionttitle{margin-bottom:15px}
+
+#views-exposed-form-multi-media-classroom-block-2 .form-submit {
+margin: 0;
+
+}
+
+/*Ê×Ò³*/
+#mycloud #frontimg {
+position: absolute;
+top: 50px;
+z-index: 0;
+left: 0;
+}
+
+#mycloud img {
+z-index: 2;
+position: relative;
+}

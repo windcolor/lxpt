@@ -66,7 +66,7 @@
     <div class="submitted">
       <p class="commenter-name">
         <?php 
-		dsm($comment);
+		//dsm($comment);
 		if ($comment->uid == 0) {
        print  t('<div style="font-size:12px;color:blue">').$comment->name.t('</div><div style="font-size:12px"> (游客)</div>') ;
         }else{
@@ -106,7 +106,7 @@
       </div>
       <?php endif; ?>
     </div> <!-- /.content -->
-<?php dsm($content)?>
+<?php //dsm($content)?>
 <?php print render($content['links']) ?>
     <?php //print t('<a href="@href">回复</a>',array('@href'=> $content['links']['comment']['#links']['comment-reply']['href'])); ?>
 	

@@ -1,0 +1,6 @@
+name = "multistep module"
+description = "multistep form"
+core = 7.x
+files[] = multistep.module
+
+package = Study Plan

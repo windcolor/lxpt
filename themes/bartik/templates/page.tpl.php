@@ -205,7 +205,7 @@
         </ul>
       <?php endif; ?>
       <?php print render($page['content']); ?>
-      <?php print $feed_icons; ?>
+      <?php //print $feed_icons; ?>
 
     </div></div> <!-- /.section, /#content -->
 
@@ -225,7 +225,21 @@
     </div></div> <!-- /#triptych, /#triptych-wrapper -->
   <?php endif; ?>
 
-  <div id="footer-wrapper"><div class="section">
+  <div id="footer-wrapper" >
+  <?php
+  //print drupal_render(menu_tree('footer'));
+$block1 = module_invoke('menu','block_view','menu-footer'); print render($block1['content']);
+//print render(menu_tree('footer'));
+//print drupal_rende(menu_tree('footer'));
+?>
+<?php
+print theme('links', array('links' => menu_navigation_links('footer')));
+?>
+  
+  
+  
+  
+  <span style="float:right;padding: 0 20px 10px 0">©2012 领新网 &nbsp;|&nbsp; 京ICP证030173号</span> <div class="section">
 
     <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn'] || $page['footer_fourthcolumn']): ?>
       <div id="footer-columns" class="clearfix">

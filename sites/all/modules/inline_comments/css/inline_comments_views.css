@@ -1,0 +1,81 @@
+.comment-click, .comment-link {
+  display: block;
+  float: left;
+  padding-right: 1em;
+}
+
+.node-nid, .user-uid {
+  display: none;
+}
+
+.views-row {
+  background: #eee;
+  margin: 2em 0;
+  padding: 2em 2em 4em;
+  box-shadow: 3px 3px 5px 0 #ccc;
+  border-radius: 5px;
+}
+
+.comment-group .comment {
+  margin: 3em 0 2em;
+  background: #ddd;
+  padding: 1em;
+  box-shadow: 3px 3px 5px 0 #ccc;
+}
+
+#edit-comment-body {
+  float: left;
+}
+
+.form-actions {
+  clear: both;
+  
+}
+
+.user-signature {
+  font-style: italic;
+  quotes: "\201C" "\201D";
+  font-size: 0.8em;
+  padding: 1em 0;
+}
+
+.user-signature p {
+  display: inline;
+}
+
+.user-signature:before {
+  content: open-quote;
+  display: inline;
+}
+.user-signature:after {
+  content: close-quote;
+  display: inline;
+}
+
+span.new {
+  color: red;
+  font-style: italic;
+}
+
+.comment h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.view .user-picture {
+	float: left;
+	padding-right: 1em;
+}
+
+.view .comment {
+		width: 100%;
+}
+
+.view .comment .content {
+	font-size: small;
+}
+
+.view .signature {
+	font-style: italic;
+	font-size: smaller;
+}

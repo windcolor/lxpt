@@ -472,7 +472,7 @@ h1#site-name {
 }
 #main-menu-links a {
   color: #333;
-  background: #ccc;
+  background: #6C6C6C;
   background: rgba(255, 255, 255, 0.7);
   float: left; /* LTR */
   height: 2.4em;
@@ -480,14 +480,14 @@ h1#site-name {
   padding: 0 0.8em;
   text-decoration: none;
   text-shadow: 0 1px #eee;
-  -khtml-border-radius-topleft: 8px;
+  /*-khtml-border-radius-topleft: 8px;
   -khtml-border-radius-topright: 8px;
   -moz-border-radius-topleft: 8px;
   -moz-border-radius-topright: 8px;
   -webkit-border-top-left-radius: 8px;
   -webkit-border-top-right-radius: 8px;
   border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-right-radius: 8px;*/
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
@@ -1648,3 +1648,26 @@ div.admin-panel .description {
 #footer-wrapper .poll .bar .foreground {
   background-color: #ddd;
 }
+
+#footer-wrapper ul li {
+    border-right: 1px dotted #CCCCCC;
+    float: left;
+    font-size: 13px;
+    list-style: none outside none;
+    padding: 0 5px;
+}
+#footer-wrapper .last {
+    border: 0 none;
+}
+/*my group style*/
+ .view-og-user-groups td{
+min-width:50px;
+width:25%;
+text-align:center;
+
+}
+
+
+
+
+

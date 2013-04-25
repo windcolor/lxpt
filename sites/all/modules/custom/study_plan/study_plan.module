@@ -1,0 +1,16 @@
+
+<?php
+
+
+function study_plan_menu() {
+	$items = array();
+    $items['plan/add'] = array(
+    'title' => t('创建学习计划'),
+    'page callback' => 'drupal_get_form',
+	'page arguments' => array('study_plan_wizard'),
+	'file'=>'study_plan_wizard.inc',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    );
+	return $items;
+}
