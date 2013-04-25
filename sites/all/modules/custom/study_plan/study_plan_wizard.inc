@@ -280,14 +280,102 @@ function study_plan_create_1_validate($form, &$form_state) {
 function study_plan_create_2($form, &$form_state) {
 
   $form = array();
-  $form['city'] = array(
+  //init stage count
+  $form_state['count']['stages'] =
+    isset($form_state['count']['stages']) ? $form_state['count']['stages'] : 0;
+  
+   //Define fieldset container
+  $form['stages'] = array(
+  '#type' => 'container',
+  '#tree' => TRUE,
+  '#prefix' => '<div id="stages">',
+  '#suffix' => '</div>',
+ );
+  //test element
+  $form['stages'][0] = array(
+        '#type' => 'fieldset',
+        '#tree' => TRUE,
+		'#title' => t('学习阶段1'),
+      );
+	  
+  $form['stages'][0]['stage_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('City'),
-    '#description' => t('Hint: Do not enter "San Francisco", and do not leave this out.'),
+    '#title' => t('阶段名称'),
+    '#description' => t('请输入阶段名称'),
     '#required' => TRUE,
-    '#default_value' => !empty($form_state['values']['city']) ? $form_state['values']['city'] : '',
+    '#default_value' => !empty($form_state['stages'][0]['stage_name']) ? $form_state['stages'][0]['stage_name'] : '',
 
   );
+  
+  $form['stages'][0]['stage_time'] = array(
+    '#type' => 'textfield',
+    '#title' => t('计划时长'),
+    '#description' => t('请输入计划时长'),
+    '#required' => TRUE,
+    '#default_value' => !empty($form_state['stages'][0]['stage_time']) ? $form_state['stages'][0]['stage_time'] : '',
+	'#size' => 4,
+    //'#default_value' => variable_get('my_field', 0),
+    '#element_validate' => array('element_validate_number'),
+  );
+ 
+ //
+ if ($form_state['count']['stages']) {
+	 $form_state['num_names'] = 1;
+    for ($i = 1; $i <= $form_state['count']['stages']; $i++) {
+      $form['stages'][$i] = array(
+        '#type' => 'fieldset',
+        '#tree' => TRUE,
+		'#title' => t('学习阶段@count', array('@count' => $i+1)),
+      );
+
+      $form['stages'][$i]['stage_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('阶段名称'),
+    '#description' => t('请输入阶段名称'),
+    '#required' => TRUE,
+    //'#default_value' => !empty($form_state['stages'][0]['stage_name']) ? $form_state['stages'][0]['stage_name'] : '',
+
+  );
+  
+  $form['stages'][$i]['stage_time'] = array(
+    '#type' => 'textfield',
+    '#title' => t('计划时长'),
+    '#description' => t('请输入计划时长'),
+    '#required' => TRUE,
+    //'#default_value' => !empty($form_state['stages'][0]['stage_time']) ? $form_state['stages'][0]['stage_time'] : '',
+	'#size' => 4,
+    //'#default_value' => variable_get('my_field', 0),
+    '#element_validate' => array('element_validate_number'),
+  );
+  
+  $form['stages'][$i]['remove_stage']= array(
+  '#type' => 'button',
+  '#value' => t('删除'),
+  //'#description' => t('点击创建新的学习阶段'),
+  '#href' => '',
+  '#ajax' => array(
+    'callback' => 'custom_ajax_remove_stage',
+    'wrapper' => 'stagess',
+   ),
+  
+  );
+  
+   $form_state['num_names'] = $i++;
+ } 
+ }
+ //Multi value fieldset
+  $form['add_stage']= array(
+  '#type' => 'button',
+  '#value' => t('添加阶段'),
+  '#description' => t('点击创建新的学习阶段'),
+  '#href' => '',
+  '#ajax' => array(
+    'callback' => 'custom_ajax_add_stage',
+    'wrapper' => 'stages',
+   ),
+  
+  );
+ //Cover image for study plan
   $form['file'] = array(
     '#type' => 'managed_file',
     '#title' => t('封面'),
@@ -301,7 +389,22 @@ function study_plan_create_2($form, &$form_state) {
 	),  
 	//required' => TRUE,
   );
+  //count stages
+   $form_state['count']['stages']++;
   return $form;
+}
+
+
+function custom_ajax_add_stage($form, $form_state) {
+  return $form['stages'];
+}
+
+function custom_ajax_remove_stage($form, $form_state) {
+ if($form_state['num_names']>1){
+  unset($form['stages'][$form_state['num_names']]);
+  $form_state['num_names']--;
+  }
+  $form_state['rebuild'] = TRUE;
 }
 
 /**
@@ -313,9 +416,7 @@ function study_plan_create_2($form, &$form_state) {
  * @ingroup form_example
  */
 function study_plan_create_2_validate($form, &$form_state) {
-  if ($form_state['values']['city'] == 'San Francisco') {
-    form_set_error('city', t('You were warned not to enter "San Francisco"'));
-  }
+  
   if ($form_state['values']['file']==NULL) { 
    form_set_error('file', t('请上传封面'));
   }
