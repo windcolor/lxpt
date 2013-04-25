@@ -1,0 +1,12 @@
+name = lxpt_og
+description = for og pages
+package = Lxpt
+core = 7.x
+
+
+; Information added by drupal.org packaging script on 2012-09-06
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "Lxpt"
+
+

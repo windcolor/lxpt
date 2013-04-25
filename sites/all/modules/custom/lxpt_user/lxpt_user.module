@@ -1,0 +1,308 @@
+<?php
+
+/**
+ * @file
+ *
+ *  change page title for user  pages 
+ */
+if (arg(0) == 'user') {
+    if(arg(1)){
+	switch (arg(1)) {
+        case 'register':
+        drupal_set_title(t('用户注册'));
+        break;
+
+        case 'password':
+        drupal_set_title(t('找回密码'));
+        break;
+            
+        case 'login':
+        drupal_set_title(t('用户登录'));
+        break;
+
+		case 'reset':
+        drupal_set_title(t('密码重置'));
+        break;
+	    //default:
+        //drupal_set_title(t('用户登录'));
+        //break;	
+    }
+	
+	switch (arg(2)) { 	
+	    case 'edit':
+        drupal_set_title(t('用户资料'));
+        break;
+        case 'points':
+        drupal_set_title(t('我的积分'));
+        break;
+		case 'invites':
+        drupal_set_title(t('邀请记录'));
+        break;
+        		
+		//default:
+        //drupal_set_title(t('用户登录'));
+        //break;	
+    }
+	if(!arg(2)){
+	
+	$cuser= user_load(arg(1));
+	drupal_set_title(t('@name的账户信息',array('@name' => $cuser->name)));
+	}
+	}
+	else{
+	drupal_set_title(t('账户信息'));
+	
+	}
+	
+  }
+  
+/**
+ * @file
+ *
+ *  implement hook_form_alter()for customize user pages 
+ */
+
+
+function lxpt_user_form_alter(&$form,&$form_state,$form_id){
+ switch ($form_id){ 
+	case'user_register_form':
+
+		$form['account']['name'] = array(
+        '#title' => t('用户名'),
+        '#description' => t('请输入用户名'),
+        '#type' => 'textfield',
+        '#required' => TRUE,
+		);
+		$form['account']['mail'] = array(
+        '#title' => t('邮箱'),
+        '#description' => t('请输入邮箱'),
+        '#type' => 'textfield',
+        '#required' => TRUE,
+		);
+        $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('提交'),
+		);
+			break;
+	
+	case'user_login':
+
+		$form['name'] = array(
+        '#title' => t('用户名'),
+        '#description' => t('请输入用户名'),
+        '#type' => 'textfield',
+        '#required' => TRUE,
+		);
+		$form['pass'] = array(
+        '#title' => t('密码'),
+        '#description' => t('请输入密码'),
+        '#type' => 'textfield',
+        '#required' => TRUE,
+		);
+        $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('提交'),
+		);
+			break;
+	
+	case'user_pass':
+
+		$form['name'] = array(
+        '#title' => t(''),
+        '#description' => t('请输入正确用户名或邮箱，以便找回您的密码'),
+        '#type' => 'textfield',
+        '#required' => TRUE,
+		);
+		
+        $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('提交'),
+		);
+			break;
+	
+	case'user_pass_reset':
+
+		$form['message'] = array(
+        '#markup' => t('<p>This is a one-time login for <em class="placeholder">lxpt-02</em> and will expire on <em class="placeholder">Wed, 2012-10-17 16:23</em>.</p><p>Click on this button to log in to the site and change your password.</p>'),
+        '#description' => t('请输入正确用户名或邮箱，以便找回您的密码'),
+        '#type' => 'textfield',
+        '#required' => TRUE,
+		);
+		
+        $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('提交'),
+		);
+	    break;
+	case'invite_form':
+
+		hide($form['message']); 
+		hide($form['subject_markup']); 
+		//hide($form['subject']);
+		hide($form['submit_show']);
+		hide($form['from']);
+		$form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('发送邀请'),
+		);		
+        $form['email']['#title']=t('好友邮箱');
+		$form['email']['#description'] = t('请在上方输入您邀请的好友们的邮件地址，每行输入一个。');
+		break;
+	case'user_profile_form':
+
+		
+		$form['account']['name']['#title']=t('用户名');
+		hide($form['account']['name']['#description']);
+		
+		$form['account']['mail']['#title']=t('邮件地址');
+		$form['account']['mail']['#description'] = t('请确认您邮箱的准确性');	
+		$form['account']['pass']['#description'] = t('更改新密码前请输入您当前的密码');
+		$form['account']['current_pass']['#title'] = t('当前密码');
+		$form['account']['current_pass']['#description']=t('');
+		$form['picture']['#title'] = t('头像上传');
+		$form['picture']['picture_upload']['#description'] = t('请上传您的头像，图像将被自动裁剪');
+		$form['picture']['picture_upload']['#title'] = t('');
+        $form['actions']['submit']['#value'] = t('保存');
+		break;
+	case'userpoints_list_transactions':
+        $form['list']['table']['#header'][0]['data']=t('我的积分');
+		break;
+	case'user_login_block':
+        $form['name']['#title']=t('用户名');
+		$form['pass']['#title']=t('密码');
+		$form['links']['#markup']=t('<div class="item-list"><ul style="padding:0 0 5px 0"><li class="first" style="list-style-type:none;float:left"><a href="/user/register" title="用户注册">用户注册</a>&nbsp;|</li> <li class="last" style="list-style-type:none;float:left"><a href="/user/password" title="忘记密码">忘记密码</a></li>
+        </ul></div>');
+        $form['actions']['submit']['#value']=t('登陆领新');
+		
+		
+		break;
+		
+	}	
+ 
+dsm($form);
+return $form;
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * 
+ **/
+
+ function lxpt_user_menu_alter(&$items) {
+  // Hiden  menu tabs
+  $items['user/register']['type'] = MENU_CALLBACK;
+  $items['user/register']['title'] = t('注册新用户');
+  $items['user/password']['type'] = MENU_CALLBACK;
+  $items['user/%user/edit']['type'] = MENU_NORMAL_ITEM;
+  $items['user/%user/invites']['type'] = MENU_NORMAL_ITEM;
+  $items['user/%user/points']['title'] = t('积分简介');
+  $items['user/%user/points']['type'] = MENU_NORMAL_ITEM;
+  $items['user/%user/points']['type'] = MENU_NORMAL_ITEM;
+  $items['user/%user/points']['menu_name'] ='menu-my-panel' ;
+  //$items['user/%user/points']['access callback'] = TRUE;
+  $items['user/%user/edit']['menu_name'] ='menu-my-panel' ;
+  $items['user/%user/invites']['menu_name'] ='menu-my-panel' ;
+  unset($items['user/%user/invites/new']);
+  $items['user/%user/devel']['type'] = MENU_CALLBACK;
+  //modify the process of retrieve password
+  $items['user/reset/%uid/%timestamp/%hashed_pass/%action'] = array(
+    'title' => t('请设置密码'), 
+	'page callback' => 'user_pass_reset', 
+	'page arguments' => array(2,3,4,'login'),
+	'access arguments' => array('access content'), 
+   );
+   
+   
+   /*$items['user/%user/points']= array(
+   'title' => t('积分简介'),
+   'page callback'=> 'userpoints_list_transactions',
+	'page arguments' => array(1),
+   'menu_name' =>'menu-my-panel',
+   'access callback' => TRUE,
+   'access arguments' => array('access content'),
+   'type' => MENU_NORMAL_ITEM,
+      
+   );*/
+  return $items;
+}
+ /*function lxpt_user_menu(){
+$items = array();
+$items['user/%user/points']= array(
+   'title' => t('积分简介'),
+   'page callback'=> 'userpoints_list_transactions',
+	'page arguments' => array(1),
+   'menu_name' =>'menu-my-panel',
+   
+   'access arguments' => array('access content'),
+   'type' => MENU_NORMAL_ITEM,
+      
+   );
+  return $items;
+
+
+
+}*/
+
+/*override core function user_pass_reset() for bypass one-time login page during password reseting
+function user_pass_resets($form,&$form_state,$uid, $timestamp, $hashed_pass, $action='login' ) {
+  global $user;
+
+  // Check if the user is already logged in. The back button is often the culprit here.
+  if ($user->uid) {
+    drupal_set_message(t('欢迎加入领新网，请完善您的账户信息'));
+    drupal_goto();
+  }
+  else {
+    // Time out, in seconds, until login URL expires. 24 hours = 86400 seconds.
+    $timeout = 86400;
+    $current = time();
+    // Some redundant checks for extra security ?
+    if ($timestamp < $current && $account = user_load(array('uid' => $uid, 'status' => 1)) ) {
+      // Deny one-time login to blocked accounts.
+      if (drupal_is_denied('user', $account->name) || drupal_is_denied('mail', $account->mail)) {
+        drupal_set_message(t('您尝试登陆的账户已经被锁定，请联系管理员.'), 'error');
+        drupal_goto();
+      }
+
+      // No time out for first time login.
+      if ($account->login && $current - $timestamp > $timeout) {
+        drupal_set_message(t('您的请求已经过期，请通过下面链接重新申请，谢谢！'));
+        drupal_goto('user/password');
+      }
+      else if ($account->uid && $timestamp > $account->login && $timestamp < $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
+        // First stage is a confirmation form, then login
+        if ($action == 'login') {
+          watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
+          // Set the new user.
+          $user = $account;
+          // user_authenticate_finalize() also updates the login timestamp of the
+          // user, which invalidates further use of the one-time login link.
+          user_authenticate_finalize($form_state['values']);
+          drupal_set_message(t('请完善您的个人资料'));
+          drupal_goto('user/' . $user->uid . '/edit');
+        }
+        else {
+          $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
+          $form['help'] = array('#value' => '<p>' . t('This login can be used only once.') . '</p>');
+          $form['submit'] = array(
+            '#type' => 'submit',
+            '#value' => t('Log in'),
+          );
+          $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
+          return $form;
+        }
+      }
+      else {
+        drupal_set_message(t('您的请求已经过期，请通过下面链接重新申请，谢谢！'));
+        drupal_goto('user/password');
+      }
+    }
+    else {
+      // Deny access, no more clues.
+      // Everything will be in the watchdog's URL for the administrator to check.
+      drupal_access_denied();
+    }
+  }
+}
+ */
