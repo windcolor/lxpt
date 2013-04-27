@@ -82,10 +82,10 @@ function study_plan_wizard($form, &$form_state) {
     // relevant form elements. It will also store state information for each
     // step.
     $form_state['step_information'] = _form_example_steps();
-	//debug($form_state['step_information']);
+	////debug($form_state['step_information']);
   }
   $step = &$form_state['step'];
-  //debug($step);
+  ////debug($step);
   if($step == 1){ 
   drupal_set_title(t('第@step步： 创建学习计划', array('@step' => $step)));
   }else{
@@ -94,7 +94,7 @@ function study_plan_wizard($form, &$form_state) {
   // Call the function named in $form_state['step_information'] to get the
   // form elements to display for this step.
   $form = $form_state['step_information'][$step]['form']($form, $form_state);
-	//debug($form);
+	////debug($form);
   // Show the 'previous' button if appropriate. Note that #submit is set to
   // a special submit handler, and that we use #limit_validation_errors to
   // skip all complaints about validation when using the back button. The
@@ -109,12 +109,12 @@ function study_plan_wizard($form, &$form_state) {
       '#limit_validation_errors' => array(),
     );
 	$dd='上一步';
-	//debug($dd);
+	////debug($dd);
   }
 
   // Show the Next button only if there are more steps defined.
   if ($step < count($form_state['step_information'])) {
-     //debug($step);
+     ////debug($step);
     // The Next button should be included on every step
     $form['next'] = array(
       '#type' => 'submit',
@@ -124,7 +124,7 @@ function study_plan_wizard($form, &$form_state) {
 	  '#limit_validation_errors' => array(),
     );
 	$ee='下一步';
-	//debug($ee);
+	////debug($ee);
   }
   else {
     // Just in case there are no more steps, we use the default submit handler
@@ -136,13 +136,13 @@ function study_plan_wizard($form, &$form_state) {
       '#value' => t('提交'),
     );
 	$ff='提交';
-	//debug($ff);
+	////debug($ff);
   }
 
   // Include each validation function defined for the different steps.
   if (function_exists($form_state['step_information'][$step]['form'] . '_validate')) {
     $form['next']['#validate'] = array($form_state['step_information'][$step]['form'] . '_validate');
-	//debug($form['next']['#validate']);
+	////debug($form['next']['#validate']);
   }
   //debug ($form);
   return $form;
@@ -162,14 +162,14 @@ function study_plan_wizard($form, &$form_state) {
  */
 function study_plan_wizard_previous_submit($form, &$form_state) {
   $current_step = &$form_state['step'];
-  //debug($current_step);
+  ////debug($current_step);
   $form_state['step_information'][$current_step]['stored_values'] = $form_state['values'];
-  //debug($form_state['step_information'][$current_step]['stored_values']);
+  ////debug($form_state['step_information'][$current_step]['stored_values']);
   if ($current_step > 1) {
     $current_step--;
-	//debug($current_step);
+	////debug($current_step);
     $form_state['values'] = $form_state['step_information'][$current_step]['stored_values'];
-	//debug($form_state['values']);
+	////debug($form_state['values']);
   }
   $form_state['rebuild'] = TRUE;
 }
@@ -191,25 +191,25 @@ function study_plan_wizard_previous_submit($form, &$form_state) {
  */
 function study_plan_wizard_next_submit($form, &$form_state) {
   $current_step = &$form_state['step'];
-   //debug($current_step);
+   ////debug($current_step);
   $form_state['step_information'][$current_step]['stored_values'] = $form_state['values'];///////////////////////////////
-  //debug($form_state['step_information'][$current_step]['stored_values']);
+  ////debug($form_state['step_information'][$current_step]['stored_values']);
   
 
   if ($current_step < count($form_state['step_information'])) {
     $current_step++;
-	//debug($current_step);
+	////debug($current_step);
     if (!empty($form_state['step_information'][$current_step]['stored_values'])) {
       $form_state['values'] = $form_state['step_information'][$current_step]['stored_values'];
-	 //debug($form_state['values']);
+	 ////debug($form_state['values']);
     }
     else {
       $form_state['values'] = array();
-	  //debug($form_state['values']);
+	  ////debug($form_state['values']);
     }
     $form_state['rebuild'] = TRUE;
 	// Force rebuild with next step.
-	 //debug( $form);
+	 ////debug( $form);
    return;
   }
  
@@ -265,7 +265,7 @@ function study_plan_create_1($form, &$form_state) {
     '#default_value' => !empty($form_state['values']['plan_access']) ? $form_state['values']['plan_access'] : '',
 	'#required' => TRUE,
   );
-    //debug( $form);
+    ////debug( $form);
   return $form;
 }
 
@@ -311,7 +311,7 @@ function study_plan_create_2($form, &$form_state) {
    }
   /*$form_state['count']['stages'] =
     isset($form_state['count']['stages']) ? $form_state['count']['stages'] : 0;*/
-    //debug( $form_state['count']['stages']);
+    ////debug( $form_state['count']['stages']);
    //Define fieldset container
   $form['stages'] = array(
   '#type' => 'contianer',
@@ -319,7 +319,7 @@ function study_plan_create_2($form, &$form_state) {
   '#prefix' => '<div id="stages">',
   '#suffix' => '</div>',
  );
- //debug($form['stages']);
+ ////debug($form['stages']);
   /*test element
   $form['stages'][0] = array(
         '#type' => 'fieldset',
@@ -352,7 +352,7 @@ function study_plan_create_2($form, &$form_state) {
 	 //$form_state['num_names'] = 1;
 	 //$i=$form_state['num_names'];
     for ($i = 0; $i < $form_state['num_names']; $i++) {
-	   debug($i);
+	   //debug($i);
       $form['stages'][$i] = array(
         '#type' => 'fieldset',
         '#tree' => TRUE,
@@ -433,11 +433,11 @@ function study_plan_create_2($form, &$form_state) {
   );
   
   
-debug($form);
+//debug($form);
   //count stages
    //$form_state['count']['stages']++; 
    //count stages
-   //debug($form_state['count']['stages']);
+   ////debug($form_state['count']['stages']);
   //count stages
    //$form_state['count']['stages']++;
   return $form;
@@ -451,7 +451,7 @@ function custom_ajax_stage($form, $form_state) {
 
 function custom_ajax_add_stage($form, &$form_state) {
  $form_state['num_names']++;
- //debug( $form_state['num_names']++);
+ ////debug( $form_state['num_names']++);
    $form_state['rebuild'] = TRUE;
   
 }
@@ -459,7 +459,7 @@ function custom_ajax_add_stage($form, &$form_state) {
 function custom_ajax_remove_stage($form, &$form_state) {
 
      $form_state['num_names']--;
-	 //debug( $form_state['num_names']--);
+	 ////debug( $form_state['num_names']--);
 
    $form_state['rebuild'] = TRUE;
  
