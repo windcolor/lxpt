@@ -185,15 +185,15 @@ function study_plan_wizard_next_submit($form, &$form_state) {
 function study_plan_create_1($form, &$form_state) {
   $form = array();
   $machine_name = 'course';
+  $term_id = 0;
   
-   $options_first = study_plan_get_tax_term_options( $machine_name);
+   $options_first = study_plan_get_tax_term_options($term_id,$machine_name);
 
     // If we have a value for the first dropdown from $form_state['values'] we use
     // this both as the default value for the first dropdown and also as a
     // parameter to pass to the function that retrieves the options for the
     // second dropdown.
-    $value_dropdown_first = isset($form_state['values']['plan_branch']) ?  $form_state['values']['plan_branch']: key($options_first);
-	//debug($value_dropdown_first);
+    $value_dropdown_first =  key($options_first);
    
   $form['plan_name'] = array(
     '#type' => 'textfield',
@@ -220,8 +220,6 @@ function study_plan_create_1($form, &$form_state) {
             'event' => 'change',
             'callback' => 'taxterms_ajax_callback',
             'wrapper' => 'relation_grade_select_list',
-			'progress' => array('type' => 'none'),
-			//'effect' => 'slide',
         ),
 	//'#required' => TRUE,
   );
@@ -231,11 +229,10 @@ function study_plan_create_1($form, &$form_state) {
     '#title' => t('科目'),
 	'#prefix' => '<div id="relation_grade_select_list">',
     '#suffix' => '</div>',
-	'#options' => study_plan_get_tax_term_options_1($value_dropdown_first,'course'),
-    //'#default_value' => !empty($form_state['values']['plan_branch_1']) ? $form_state['values']['plan_branch_1'] : '',
+	'#options' => study_plan_get_tax_term_options($value_dropdown_first,$machine_name),
+    '#default_value' => !empty($form_state['values']['plan_branch_1']) ? $form_state['values']['plan_branch_1'] : '',
 	
   );
-  
   $form['plan_access'] = array(
     '#type' => 'radios',
     '#title' => t('权限'),
@@ -265,33 +262,40 @@ return $form['plan_branch_1'];
 }
 
 // call  Course category
-function study_plan_get_tax_term_options($machine_name){
-    $options = array( '0' => t('请选择年级'));
-	$term_id = 0;
-    $options += _get_tax_term_options($term_id,$machine_name);
-	//debug($options);
-
-    return $options;
-}
-function study_plan_get_tax_term_options_1($term_id,$machine_name){
-    
-    $options = array( '0' => t('请选择科目'));
-	if($term_id != 0){
+function study_plan_get_tax_term_options($term_id,$machine_name){
+    if($term_id==0){ 
+	$options = array( '0' => t('请选择年级'));
+	}else{
 	
-    $options += _get_tax_term_options($term_id,$machine_name);
+	$options = array( '0' => t('请选择科目'));
+	}
+
+    $vid = taxonomy_vocabulary_machine_name_load($machine_name)->vid;
+
+    $options_source = taxonomy_get_tree($vid);
+
+    foreach($options_source as $item ) {
+	    if($item->parents[0]==$term_id){ 
+        $key = $item->tid;
+        $value = $item->name;
+        $options[$key] = $value;
+		 
+		 }
     }
+
     return $options;
 }
-
-function _get_tax_term_options($term_id,$machine_name){
+/*function study_plan_get_tax_term_options_1($term_id,$machine_name){
     
+	//debug($term_id);
+
     $vid = taxonomy_vocabulary_machine_name_load($machine_name)->vid;
 
     $options_source = taxonomy_get_tree($vid);
 
     foreach($options_source as $item ) {
 	
-	    if($item->parents[0] == $term_id){ 
+	    if($item->parents[0]==){ 
         $key = $item->tid;
         $value = $item->name;
         $options[$key] = $value;
@@ -299,7 +303,7 @@ function _get_tax_term_options($term_id,$machine_name){
     }
     
     return $options;
-}
+}*/
 
 function study_plan_create_1_validate($form, &$form_state) {
   if ($form_state['values']['plan_branch'] == '0') {
