@@ -106,7 +106,7 @@ function study_plan_wizard($form, &$form_state) {
       '#value' => t('上一步'),
       '#name' => 'prev',
       '#submit' => array('study_plan_wizard_previous_submit'),
-      '#limit_validation_errors' => array(),
+     // '#limit_validation_errors' => array(),
     );
 	$dd='上一步';
 	////debug($dd);
@@ -121,7 +121,7 @@ function study_plan_wizard($form, &$form_state) {
       '#value' => t('下一步'),
       '#name' => 'next',
       '#submit' => array('study_plan_wizard_next_submit'),
-	  '#limit_validation_errors' => array(),
+	  //'#limit_validation_errors' => array(),
     );
 	$ee='下一步';
 	////debug($ee);
@@ -138,6 +138,7 @@ function study_plan_wizard($form, &$form_state) {
 	$ff='提交';
 	////debug($ff);
   }
+  $form_state['values']['grade']=$form['plan_branch']['#options'];
 
   // Include each validation function defined for the different steps.
   if (function_exists($form_state['step_information'][$step]['form'] . '_validate')) {
@@ -250,9 +251,16 @@ function study_plan_create_1($form, &$form_state) {
   );
   $form['plan_branch'] = array(
     '#type' => 'select',
-    '#title' => t('分类'),
+    '#title' => t('年级'),
 	'#options' => study_plan_get_tax_term_options('course'),
     '#default_value' => !empty($form_state['values']['plan_branch']) ? $form_state['values']['plan_branch'] : '',
+	'#required' => TRUE,
+  );
+  $form['plan_branch_1'] = array(
+    '#type' => 'select',
+    '#title' => t('科目'),
+	'#options' => study_plan_get_tax_term_options_1($form_state,'course'),
+    '#default_value' => !empty($form_state['values']['plan_branch_1']) ? $form_state['values']['plan_branch_1'] : '',
 	'#required' => TRUE,
   );
   $form['plan_access'] = array(
@@ -262,7 +270,7 @@ function study_plan_create_1($form, &$form_state) {
 						'public' => t('公开'),
 						'private' => t('私有'),
 						),
-    '#default_value' => !empty($form_state['values']['plan_access']) ? $form_state['values']['plan_access'] : '',
+    '#default_value' => 'public',//!empty($form_state['values']['plan_access']) ? $form_state['values']['plan_access'] : '',
 	'#required' => TRUE,
   );
     ////debug( $form);
@@ -274,16 +282,37 @@ function study_plan_create_1($form, &$form_state) {
 
 
 function study_plan_get_tax_term_options($machine_name){
-    $options = array( '0' => t('请选择计划分类'));
+    $options = array( '0' => t('请选择年级'));
 
     $vid = taxonomy_vocabulary_machine_name_load($machine_name)->vid;
 
     $options_source = taxonomy_get_tree($vid);
 
     foreach($options_source as $item ) {
+	    if($item->parents[0]==0){ 
         $key = $item->tid;
         $value = $item->name;
         $options[$key] = $value;
+		 
+		 }
+    }
+
+    return $options;
+}
+function study_plan_get_tax_term_options_1(&$form_state,$machine_name){
+    $options = array( '0' => t('请选择科目'));
+
+    $vid = taxonomy_vocabulary_machine_name_load($machine_name)->vid;
+
+    $options_source = taxonomy_get_tree($vid);
+
+    foreach($options_source as $item ) {
+	
+	    if($item->parents[0]==$form_state['values']['grade']){ 
+        $key = $item->tid;
+        $value = $item->name;
+        $options[$key] = $value;
+		 }
     }
 
     return $options;
@@ -291,7 +320,7 @@ function study_plan_get_tax_term_options($machine_name){
 
 function study_plan_create_1_validate($form, &$form_state) {
   if ($form_state['values']['plan_branch'] == '0') {
-    form_set_error('city', t('请选择计划分类'));
+    form_set_error('city', t('请选择年级'));
   }
 
 }
@@ -428,18 +457,14 @@ function study_plan_create_2($form, &$form_state) {
 	'file_validate_size' => array('MAX_FILE_SIZE' * 200 * 100),
 	'#size' => 40,
 	'#name' => 'cover',
-	),  
-	//required' => TRUE,
+	),
+	
+	'#required' => TRUE,
   );
   
   
 //debug($form);
-  //count stages
-   //$form_state['count']['stages']++; 
-   //count stages
-   ////debug($form_state['count']['stages']);
-  //count stages
-   //$form_state['count']['stages']++;
+  
   return $form;
 }
 
@@ -508,8 +533,9 @@ function study_plan_create_2_validate($form, &$form_state) {
    else {
  
     form_set_error('file', t('上传封面出错'));
+
 	}*/
-}
+	}
 
 /**
  * Returns form elements for the 'other info' page of the wizard. This is the
@@ -547,7 +573,7 @@ function study_plan_wizard_submit($form, &$form_state) {
   $form_state['step_information'][$current_step]['stored_values'] = $form_state['values'];
     
   $file =file_load( $form_state['values']['file']);
-   unset($form_state['values']['file']);
+   //unset($form_state['values']['file']);
   $file->status = FILE_STATUS_PERMANENT;
   file_save($file);
   drupal_set_message(t('The form has been submitted and the image has been saved, filename: @filename.', array('@filename' => $file->filename)));
