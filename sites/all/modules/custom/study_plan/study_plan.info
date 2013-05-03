@@ -4,4 +4,5 @@ name = Study Plan
 description = "study plan with multistep form"
 core = 7.x
 
+dependencies[] = entity
 package =  Study Plan

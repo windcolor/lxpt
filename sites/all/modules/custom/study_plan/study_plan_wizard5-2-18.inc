@@ -172,7 +172,7 @@ function study_plan_wizard_next_submit($form, &$form_state) {
     }
     $form_state['rebuild'] = TRUE;
 	
-   //return;
+   return;
   }
  
 }
@@ -207,19 +207,6 @@ function study_plan_create_1($form, &$form_state) {
     '#default_value' => !empty($form_state['values']['plan_brief']) ? $form_state['values']['plan_brief'] : '',
 	'#required' => TRUE,
   );
-  $form['file'] = array(
-    '#type' => 'managed_file',
-    '#title' => t('封面'),
-    '#description' => t('请上传封面图片,文件格式: jpg, jpeg, png, gif'),
-	'#upload_location' => 'public://',
-	'#upload_validators' => array(
-	'file_validate_extensions' => array('gif png jpg jpeg'),
-	'file_validate_size' => array('MAX_FILE_SIZE' * 200 * 100),
-	'#size' => 40,
-	'#name' => 'cover',
-	'#process' => array('my_file_element_process'),
-	),
-	);
   $form['plan_branch'] = array(
     '#type' => 'select',
     '#title' => t('科目'),
@@ -233,22 +220,21 @@ function study_plan_create_1($form, &$form_state) {
             'event' => 'change',
             'callback' => 'taxterms_ajax_callback',
             'wrapper' => 'relation_grade_select_list',
-			 'progress' => array('type' => 'none'),
-			 //'effect' => 'none',
+			'progress' => array('type' => 'none'),
+			//'effect' => 'slide',
         ),
 	//'#required' => TRUE,
   );
  
-  $form['plan_textbook'] = array(
+  $form['plan_branch_1'] = array(
     '#type' => 'select',
     '#title' => t('教材'),
 	'#prefix' => '<div id="relation_grade_select_list">',
     '#suffix' => '</div>',
 	'#options' => study_plan_get_tax_term_options_1($value_dropdown_first,'course'),
-    '#default_value' => !empty($form_state['values']['plan_textbook']) ? $form_state['values']['plan_textbook'] : '',
+    '#default_value' => !empty($form_state['values']['plan_branch_1']) ? $form_state['values']['plan_branch_1'] : '',
 	
   );
-  
   
   $form['plan_access'] = array(
     '#type' => 'radios',
@@ -260,23 +246,15 @@ function study_plan_create_1($form, &$form_state) {
     '#default_value' => 'public',
 	'#required' => TRUE,
   );
-  //Cover image for study plan
-  
     //debug( $form);
   return $form;
 }
 
-function my_file_element_process($element, &$form_state, $form) {
-  $element = file_managed_file_process($element, $form_state, $form);
-  $element['upload_button']['#access'] = FALSE;
-  return $element;
-}
+
 
 function taxterms_ajax_callback($form, $form_state){
- //Alter the form.
-  
 
-return $form['plan_textbook'];
+return $form['plan_branch_1'];
 
 
 //$form_state['rebuild'] = TRUE;
@@ -285,7 +263,7 @@ return $form['plan_textbook'];
 
 
 
-// callback  Course category
+// call  Course category
 function study_plan_get_tax_term_options($machine_name){
     $options = array( '0' => t('请选择科目'));
 	$term_id = 0;
@@ -294,7 +272,6 @@ function study_plan_get_tax_term_options($machine_name){
 
     return $options;
 }
-//callback textbook list according the selected course
 function study_plan_get_tax_term_options_1($term_id,$machine_name){
     
     $options = array( '0' => t('请选择教材'));
@@ -305,7 +282,6 @@ function study_plan_get_tax_term_options_1($term_id,$machine_name){
     return $options;
 }
 
-//foreach taxonomy children tree according the selected  parent term
 function _get_tax_term_options($term_id,$machine_name){
     
     $vid = taxonomy_vocabulary_machine_name_load($machine_name)->vid;
@@ -324,15 +300,14 @@ function _get_tax_term_options($term_id,$machine_name){
     return $options;
 }
 
-//The first part form  validation
 function study_plan_create_1_validate($form, &$form_state) {
   if ($form_state['values']['plan_branch'] == '0') {
     form_set_error('plan_branch', t('请选择科目'));
   }
 
 
-  if ($form_state['values']['plan_textbook'] == '0') {
-    form_set_error('plan_textbook', t('请选择教材'));
+  if ($form_state['values']['plan_branch_1'] == '0') {
+    form_set_error('plan_branch_1', t('请选择教材'));
   }
 
 }
@@ -345,14 +320,11 @@ function study_plan_create_2($form, &$form_state) {
 
   $form = array();
   $machine_name = 'course';
-    
-  //get the choosen key of second option list 
-  $value_options_second = $form_state['step_information'][1]['stored_values']['plan_textbook'];
-  //debug($value_options_second );
   
-  //get the third option list
-  $options_third = study_plan_get_tax_term_options_2($value_options_second,'course');
+   //$options_first = study_plan_get_tax_term_options( $machine_name);
   
+  $value_options_second = $form_state['step_information'][1]['stored_values']['plan_branch_1'];
+  //$value_dropdown_third =isset($form_stateform['stages'][$i]['plan_chapter']) ?  $form_stateform['stages'][$i]['plan_chapter']: key(study_plan_get_tax_term_options_3($value_options_second,'course'),);//debug($i);
   //init stage count
   if (empty($form_state['num_names'])) {
      $form_state['num_names'] = 1;
@@ -365,17 +337,16 @@ function study_plan_create_2($form, &$form_state) {
   '#prefix' => '<div id="stages">',
   '#suffix' => '</div>',
  );
- // output stages
+ // output sstages
     for ($i = 0; $i < $form_state['num_names']; $i++) {
-		//get the choosen key of third option list
-	    $value_dropdown_third =isset($form_state['values']['stages'][$i]['plan_chapter']) ?  $form_state['values']['stages'][$i]['plan_chapter']: key($options_third);
-         //debug($value_dropdown_third);
+	     $value_dropdown_third =isset($form_stateform['stages'][$i]['plan_chapter']) ?  $form_stateform['stages'][$i]['plan_chapter']: key(study_plan_get_tax_term_options_3($value_options_second,'course'));//debug($i);
+ 
       $form['stages'][$i] = array(
-       '#type' => 'fieldset',
-       '#tree' => TRUE,
+        '#type' => 'fieldset',
+        '#tree' => TRUE,
 		'#title' => t('学习阶段@count', array('@count' => $i+1)),
 		'#prefix' => '<div class="two-col">',
-		'#suffix' => '</div>'
+     '#suffix' => '</div>'
       );
        
       $form['stages'][$i]['stage_name'] = array(
@@ -387,7 +358,7 @@ function study_plan_create_2($form, &$form_state) {
     '#default_value' => !empty($form_state['values']['stages'][$i]['stage_name']) ? $form_state['values']['stages'][$i]['stage_name'] : '',
 
   );
-  
+  //debug($form_state['values']['stages'][$i]['stage_name']);
   $form['stages'][$i]['stage_time'] = array(
     '#type' => 'textfield',
     '#title' => t('计划时长'),
@@ -395,14 +366,16 @@ function study_plan_create_2($form, &$form_state) {
     '#required' => TRUE,
     '#default_value' => !empty($form_state['values']['stages'][$i]['stage_time']) ? $form_state['values']['stages'][$i]['stage_time'] : '',
 	'#size' => 4,
+    //'#default_value' => variable_get('my_field', 0),
     '#element_validate' => array('element_validate_number'),
   );
  
   $form['stages'][$i]['plan_chapter'] = array(
     '#type' => 'select',
     '#title' => t('章节'),
-	'#required' => TRUE,
-	'#options' => $options_third,
+	'#prefix' => '<div id="relation_chapter_select_list_'.$i.'">',
+    '#suffix' => '</div>',
+	'#options' => study_plan_get_tax_term_options_2($value_dropdown_third,'course'),
     '#default_value' => !empty($form_state['values']['stages'][$i]['plan_chapter']) ? $form_state['values']['stages'][$i]['plan_chapter'] : '',
 	'#ajax' => array(
             // When 'event' occurs, Drupal will perform an ajax request in the
@@ -415,20 +388,19 @@ function study_plan_create_2($form, &$form_state) {
 			'progress' => array('type' => 'none'),
 			//'effect' => 'slide',
         ),
-	'#required' => TRUE,
+	//'#required' => TRUE,
   );
- 
- $form['stages'][$i]['plan_node'] = array(
+  $form['stages'][$i]['plan_node'] = array(
     '#type' => 'select',
-    '#title' => t('知识点'),
+    '#title' => t('章节'),
 	'#prefix' => '<div id="relation_chapter_select_list_'.$i.'">',
     '#suffix' => '</div>',
-	'#options' => study_plan_get_tax_term_options_nodes($value_dropdown_third),
+	'#options' => study_plan_get_tax_term_options_3($value_options_second,'course'),
     '#default_value' => !empty($form_state['values']['stages'][$i]['plan_node']) ? $form_state['values']['stages'][$i]['plan_node'] : '',
-	'#required' => TRUE,
+	
+	//'#required' => TRUE,
   );
- 
- if($i>0){
+  if($i>0){
   $form['stages'][$i]['remove_stage']= array(
   '#type' => 'submit',
   '#value' => t('删除'),
@@ -442,11 +414,16 @@ function study_plan_create_2($form, &$form_state) {
 	'progress' => array('type' => 'none'),
 	'effect' => 'fade',
 	
-		),
-	);
+   ),
    
+     
+  );
   }
-  
+  /*$form['#attached']['js'] = array(
+	drupal_get_path('module','study_plan').'/remove_button.js' => array(
+	'type' => 'file',
+	),
+	);*/
   
    
  }
@@ -468,10 +445,21 @@ function study_plan_create_2($form, &$form_state) {
   
   );
   
- 
+ //Cover image for study plan
+  $form['file'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('封面'),
+    '#description' => t('请上传封面图片,文件格式: jpg, jpeg, png, gif'),
+	'#upload_location' => 'public://',
+	'#upload_validators' => array(
+	'file_validate_extensions' => array('gif png jpg jpeg'),
+	'file_validate_size' => array('MAX_FILE_SIZE' * 200 * 100),
+	'#size' => 40,
+	'#name' => 'cover',
+	),
 	
 	
- 
+  );
   
 
 //debug($form);
@@ -479,30 +467,30 @@ function study_plan_create_2($form, &$form_state) {
   return $form;
 }
 
-//callback print whole html the structure of the  stages block
+
 function custom_ajax_stage($form, $form_state) {
  
   return $form['stages'];
 }
-// rebuild stages block after add stage button clicked
+
 function custom_ajax_add_stage($form, &$form_state) {
  $form_state['num_names']++;
  ////debug( $form_state['num_names']++);
    $form_state['rebuild'] = TRUE;
   
 }
-// rebuild stages block after remove stage button clicked
+
 function custom_ajax_remove_stage($form, &$form_state) {
 
      $form_state['num_names']--;
-	 //debug( $form_state['num_names']--);
+	 ////debug( $form_state['num_names']--);
 
    $form_state['rebuild'] = TRUE;
  
  
    
 }
-// callback  the third options list
+
 function study_plan_get_tax_term_options_2($term_id,$machine_name){
     
     $options = array( '0' => t('请选择章节'));
@@ -513,35 +501,33 @@ function study_plan_get_tax_term_options_2($term_id,$machine_name){
     return $options;
 }
 
-// callback the node list by the selected term
-function study_plan_get_tax_term_options_nodes($term_id){
+function study_plan_get_tax_term_options_3($term_id,$machine_name){
     
     $options = array( '0' => t('请选择知识点'));
 	
 	$result = taxonomy_select_nodes($term_id);
-	//debug($result);
 	
 	foreach($result  as $item ) {
-	    $key = $item;
-        $value =node_load($item)->title;
+	
+	    
+        $key = $item->nid;
+        $value = $item->title;
         $options[$key] = $value;
 		 
     }
 	
-    
+    //$options += _get_tax_term_options($term_id,$machine_name);
    
     return $options;
 }
 
-//print the whole html structure of the node list
 function taxterms_ajax_callback_1($form, $form_state){
 
-$i =  $form_state['num_names']-1;
+
+return $form['stages'];
+
+
 //$form_state['rebuild'] = TRUE;
-return $form['stages'][$i]['plan_node'];
-
-
-
 
 }
 
@@ -601,13 +587,13 @@ function study_plan_wizard_submit($form, &$form_state) {
    unset($form_state['values']['file']);
   $file->status = FILE_STATUS_PERMANENT;
   file_save($file);
-  //drupal_set_message(t('The form has been submitted and the image has been saved, filename: @filename.', array('@filename' => $file->filename)));
+  drupal_set_message(t('The form has been submitted and the image has been saved, filename: @filename.', array('@filename' => $file->filename)));
   
   // In this case we've completed the final page of the wizard, so process the
   // submitted information.
  
+  drupal_set_message(t('创建成功'));
   
-  $my_stored_vlaues  = array();
   foreach ($form_state['step_information'] as $index => $value) {
     // Remove FAPI fields included in the values (form_token, form_id and form_build_id
     // This is not required, you may access the values using $value['stored_values']
@@ -618,49 +604,7 @@ function study_plan_wizard_submit($form, &$form_state) {
     unset($value['stored_values']['form_token']);
 
     // Now show all the values.
-   // drupal_set_message(t('Step @num collected the following values: <pre>@result</pre>', array('@num' => $index, '@result' => print_r($value['stored_values'], TRUE))));
-	$my_stored_vlaues = array_merge($my_stored_vlaues,$value['stored_values']);
-	debug($my_stored_vlaues);
+    drupal_set_message(t('Step @num collected the following values: <pre>@result</pre>', array('@num' => $index, '@result' => print_r($value['stored_values'], TRUE))));
   }
-   import_to_node_with_entity_api($my_stored_vlaues);
-   drupal_set_message(t('创建成功'));
-}
-
-function import_to_node_with_entity_api($posted_vlaues ){
-
-global $user;
-$store_values = array(
-  'type' => 'study_plan',
-  'uid' => $user->uid,
-  'status' => 1,
-  'comment' => 1,
-  'promote' => 0,
-  //'group_group'=> 1,
-  'title' => $posted_vlaues['plan_name'],
-  //'body' => $stored_vlaues[plan_brief],
-  
- //'image_file' => $stored_vlaues[file],*/
-  
-  
-  
-);
-
-// Create an Entity
-$e = entity_create('node',$store_values);
-// Specify the author
-
-// Create a Entity Wrapper of that new Entity
-$entity = entity_metadata_wrapper('node',$e);
- 
-// Specify the title
-$entity->field_branch =$posted_vlaues['plan_branch'];
-$entity->field_textbook =$posted_vlaues['plan_textbook'];
-// Save the node.
-$entity->save();
-
-
-
-
-
-
+  //dsm($form);
 }
