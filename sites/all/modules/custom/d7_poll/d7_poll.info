@@ -1,9 +1,0 @@
-;$Id$
-
-name = D7 Poll
-description = "A multi steps form with Ctools"
-core = 7.x
-
-dependencies[] = ctools
-
-package =  Study Plan

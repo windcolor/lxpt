@@ -207,19 +207,7 @@ function study_plan_create_1($form, &$form_state) {
     '#default_value' => !empty($form_state['values']['plan_brief']) ? $form_state['values']['plan_brief'] : '',
 	'#required' => TRUE,
   );
-  $form['file'] = array(
-    '#type' => 'managed_file',
-    '#title' => t('封面'),
-    '#description' => t('请上传封面图片,文件格式: jpg, jpeg, png, gif'),
-	'#upload_location' => 'public://',
-	'#upload_validators' => array(
-	'file_validate_extensions' => array('gif png jpg jpeg'),
-	'file_validate_size' => array('MAX_FILE_SIZE' * 200 * 100),
-	'#size' => 40,
-	'#name' => 'cover',
-	'#process' => array('my_file_element_process'),
-	),
-	);
+  
   $form['plan_branch'] = array(
     '#type' => 'select',
     '#title' => t('科目'),
@@ -469,7 +457,19 @@ function study_plan_create_2($form, &$form_state) {
   );
   
  
-	
+	$form['file'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('封面'),
+    '#description' => t('请上传封面图片,文件格式: jpg, jpeg, png, gif'),
+	'#upload_location' => 'public://',
+	'#upload_validators' => array(
+	'file_validate_extensions' => array('gif png jpg jpeg'),
+	'file_validate_size' => array('MAX_FILE_SIZE' * 200 * 100),
+	'#size' => 40,
+	'#name' => 'cover',
+	'#process' => array('my_file_element_process'),
+	),
+	);
 	
  
   
@@ -620,47 +620,10 @@ function study_plan_wizard_submit($form, &$form_state) {
     // Now show all the values.
    // drupal_set_message(t('Step @num collected the following values: <pre>@result</pre>', array('@num' => $index, '@result' => print_r($value['stored_values'], TRUE))));
 	$my_stored_vlaues = array_merge($my_stored_vlaues,$value['stored_values']);
-	debug($my_stored_vlaues);
+	//debug($my_stored_vlaues);
   }
+   module_load_include('inc', 'study_plan', 'create_node_with_entity_api');
    import_to_node_with_entity_api($my_stored_vlaues);
    drupal_set_message(t('创建成功'));
 }
 
-function import_to_node_with_entity_api($posted_vlaues ){
-
-global $user;
-$store_values = array(
-  'type' => 'study_plan',
-  'uid' => $user->uid,
-  'status' => 1,
-  'comment' => 1,
-  'promote' => 0,
-  //'group_group'=> 1,
-  'title' => $posted_vlaues['plan_name'],
-  //'body' => $stored_vlaues[plan_brief],
-  
- //'image_file' => $stored_vlaues[file],*/
-  
-  
-  
-);
-
-// Create an Entity
-$e = entity_create('node',$store_values);
-// Specify the author
-
-// Create a Entity Wrapper of that new Entity
-$entity = entity_metadata_wrapper('node',$e);
- 
-// Specify the title
-$entity->field_branch =$posted_vlaues['plan_branch'];
-$entity->field_textbook =$posted_vlaues['plan_textbook'];
-// Save the node.
-$entity->save();
-
-
-
-
-
-
-}
